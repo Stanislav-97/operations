@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 class BaseModel
   class << self
     def find(id)
       model_attributes = Database.db[@table_name][id: id]
-      if model_attributes.nil?
-        raise StandardError, "Not found"
-      else
-        new(model_attributes)
-      end
+      raise StandardError, 'Not found' if model_attributes.nil?
+
+      new(model_attributes)
     end
 
     def create(attrs)
@@ -28,7 +28,7 @@ class BaseModel
     end
   end
 
-  def initialize(kwargs= {})
+  def initialize(kwargs = {})
     self.class.attributes.each do |attribute|
       instance_variable_set("@#{attribute}", kwargs[attribute])
 

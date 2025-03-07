@@ -1,10 +1,12 @@
-require_relative "base_action"
+# frozen_string_literal: true
+
+require_relative 'base_action'
 
 class PostSubmit < BaseAction
   def call
     {
       status: 200,
-      message: "ok",
+      message: 'ok',
       operation_info: {
         user_id: user.id,
         cashback: operation.cashback,
@@ -22,7 +24,7 @@ class PostSubmit < BaseAction
   def user
     @user ||= User.find(params.user.id)
   end
-  
+
   def operation
     @operation ||= Operation.find(params.operation_id)
   end

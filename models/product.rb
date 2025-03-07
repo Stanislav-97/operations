@@ -1,4 +1,6 @@
-require_relative "base_model"
+# frozen_string_literal: true
+
+require_relative 'base_model'
 
 class Product < BaseModel
   table_name :products

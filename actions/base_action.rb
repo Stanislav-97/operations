@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BaseAction
   attr_reader :params
 

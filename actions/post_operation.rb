@@ -1,15 +1,17 @@
-require_relative "base_action"
+# frozen_string_literal: true
+
+require_relative 'base_action'
 
 class PostOperation < BaseAction
-  attr_reader :total_sum, :cashback, :discount, :positions_arr
-  attr_writer :total_sum, :cashback, :discount
+  attr_accessor :total_sum, :cashback, :discount
+  attr_reader :positions_arr
 
   def initialize(_)
     super
     @total_sum = 0
     @cashback = 0
     @discount = 0
-    @positions_arr = []
+    @formatted_positions = []
   end
 
   def call
@@ -38,17 +40,20 @@ class PostOperation < BaseAction
     product_discount = 0
 
     case product.type
-    when ->(type) { type == "increased_cashback" && template.cashback.positive? }
+    when ->(type) { type == 'increased_cashback' && template.cashback.positive? }
       product_cashback = sum * (template.cashback.to_f / 100)
       @cashback += product_cashback
-    when ->(type) { type == "discount" && template.discount.positive? }
+    when ->(type) { type == 'discount' && template.discount.positive? }
       product_discount = sum * (template.discount.to_f / 100)
       @discount += product_discount
     end
 
     discount_value = product_cashback + product_discount
-    
-    positions_arr << {
+    add_formatted_position(discount_value, product_cashback, product_discount)
+  end
+
+  def add_formatted_position(discount_value, product_cashback, product_discount)
+    formatted_positions << {
       type: product.type,
       value: product.value,
       name: product.name,
