@@ -20,10 +20,10 @@ class PostSubmit < BaseAction
   private
 
   def user
-    @user ||= User.find(params["user"]["id"])
+    @user ||= User.find(params.user.id)
   end
   
   def operation
-    @operation ||= Operation.find(params["operation_id"])
+    @operation ||= Operation.find(params.operation_id)
   end
 end

@@ -24,8 +24,6 @@ class PostOperation < BaseAction
     total_discount_percent = (total_discount.zero? ? 0 : @total_sum / (total_discount * 100).to_f).ceil(2)
     operation = create_operation(common_cashback_percent, total_discount_percent)
     generate_result(operation, common_cashback_percent, total_discount, total_discount_percent).to_json
-  rescue StandardError => e
-    binding.pry
   end
 
   private
@@ -92,7 +90,7 @@ class PostOperation < BaseAction
   end
 
   def user
-    @user ||= User.find(params["user_id"])
+    @user ||= User.find(params.user_id)
   end
 
   def template
@@ -100,6 +98,6 @@ class PostOperation < BaseAction
   end
 
   def positions
-    params["positions"].map { |attrs| Position.new(attrs) }
+    params.positions.map { |attrs| Position.new(attrs) }
   end
 end

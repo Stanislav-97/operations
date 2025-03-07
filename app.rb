@@ -13,11 +13,33 @@ require_relative "actions/post_submit"
 
 class ParamsParser
   def initialize(request)
-    @params = JSON.parse(request.body.read)
+    @params = generate(JSON.parse(request.body.read))
   end
 
   def call
     yield(@params)
+  end
+
+  private
+
+  def generate(params)
+    struct = Struct.new(*params.keys.map(&:to_sym))
+    values = extract_values(params)
+      
+    struct.new(*values)
+  end
+
+  def extract_values(params)
+    params.keys.map do |key|
+      case params[key]
+      when Hash
+        generate(params[key])
+      when Array
+        params[key].map { generate(_1) }
+      else 
+        params[key]
+      end
+    end
   end
 end
 
